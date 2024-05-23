@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  osticket-db:
+    container_name: osticket-db
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: osticket_db
+      MYSQL_USER: osticket
+      MYSQL_PASSWORD: manager_secret
+    volumes:
+      - data:/var/lib/mysql
+
+  osticket:
+    container_name: osticket
+    image: osticket
+    environment:
+      OSTICKET_DB_HOST: osticket-db
+      OSTICKET_DB_NAME: osticket_db
+      OSTICKET_DB_USER: osticket
+      OSTICKET_DB_PASS: manager_secret
+    ports:
+      - "80:80"
+    volumes:
+      - /var/www/osticket
+    depends_on:
+      - osticket-db
+
+volumes:
+  data:
+
